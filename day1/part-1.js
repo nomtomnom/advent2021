@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const processTextToArray = require('../processTextToArray');
 
 function depthIncreaseRate(data) {
   // pointer: lastVal
@@ -24,19 +23,7 @@ function depthIncreaseRate(data) {
   return largerThanPreviousCount;
 }
 
-function processTextToArray(fileName) {
-  // import data
-  const dataRaw = fs.readFileSync(path.resolve(__dirname, fileName));
-  // parse data from buffer
-  const dataConcat = Buffer.from(dataRaw, 'utf8').toString();
-  // return data split into arrays @ line breaks
-  return dataConcat.split('\n');
-}
-
-const sampleData = [199,200,208,210,200,207,240,269,260,263];
-
-
 // console.log(depthIncreaseRate(sampleData)); // 7
-console.log(depthIncreaseRate(processTextToArray('data.txt')));
+console.log(depthIncreaseRate(processTextToArray('day1/data.txt')));
 
 
