@@ -1,17 +1,7 @@
 function numFish(population, days) {
   // eight day lifecycle
   // cycle numbers each day
-  const fishPop = {
-    [0]: 0,
-    [1]: 0,
-    [2]: 0,
-    [3]: 0,
-    [4]: 0,
-    [5]: 0,
-    [6]: 0,
-    [7]: 0,
-    [8]: 0
-  }
+  const fishPop = new Array(9).fill(0);
 
   // populate object w/ seed data
   population.forEach(el => {
