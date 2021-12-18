@@ -17,32 +17,66 @@ function foldTransparency(coords, folds, [ gridX, gridY ], num = -1) {
     matrix = foldMatrix(matrix, folds[i]);
   }
 
+  const newMatrix = new Array(matrix.length).fill().map(el => new Array(matrix[0].length).fill('.'));
   // console.log(matrix);
-  // matrix.forEach(el => console.log(el));
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      if (matrix[i][j]) newMatrix[i][j] = '#';
+    }
+  }
+
+  newMatrix.forEach(el => {
+    console.log(el.join(''))
+    // console.log('');
+  });
   // count points
   return countPoints(matrix);
 }
 
 function foldMatrix(matrix, fold) {
   const [direction, coord] = fold;
-  console.log(direction, ' = ', coord);
+  // console.log(direction, ' = ', coord);
 
-  const xMax = direction === 'x' ? coord : matrix[0].length - 1;
-  const yMax = direction === 'y' ? coord : matrix.length - 1;
+  const xMax = direction === 'x' ? matrix[0].length - coord : matrix[0].length - 1;
+  const yMax = direction === 'y' ? matrix.length - coord : matrix.length - 1;
 
   const newMatrix = new Array(yMax + 1).fill().map(el => new Array(xMax + 1).fill(0));
-  console.log('OLD', 'x', matrix[0].length, 'y', matrix.length)
-  console.log('NEW', 'x', newMatrix[0].length, 'y', newMatrix.length);
-  console.log('MAX', 'x', xMax, 'y', yMax);
+  // console.log('OLD', 'x', matrix[0].length, 'y', matrix.length)
+  // console.log('NEW', 'x', newMatrix[0].length, 'y', newMatrix.length);
+  // console.log('MAX', 'x', xMax, 'y', yMax);
+
+  const edgeX = direction === 'x' ? coord : xMax;
+  const edgeY = direction === 'y' ? coord : yMax;
 
   // fill in newMatrix
   // iterate through original matrix
   // if points are past fold, "reflect"
   for (let y = 0; y < matrix.length; y++) {
     for (let x = 0; x < matrix[0].length; x++) {
+      // mark edge
+      let xCoord;
+      let yCoord;
+      let xShift = direction === 'x' ? xMax - edgeX : 0;
+      let yShift = direction === 'y' ? yMax - edgeY : 0;
+
+      if (y < edgeY) {
+        // shift + y
+        yCoord = yShift + y;
+      } else if (y >= edgeY) {
+        // go backwards
+        // shift + (shift - y)
+        yCoord = yMax + edgeY - y;
+      }
+
+      if (x < edgeX) {
+        xCoord = xShift + x;
+      } else if (x >= edgeX) {
+        xCoord = xMax + edgeX - x;
+      }
+
       // coordinate is either original coordinate, or if outside of the reflection zone, reflected
-      const xCoord = (x < xMax ? x : xMax - Math.abs(x - xMax));
-      const yCoord = (y < yMax ? y : yMax - Math.abs(y - yMax));
+      // const xCoord = (x < xMax ? x : xMax - Math.abs(x - xMax));
+      // const yCoord = (y < yMax ? y : yMax - Math.abs(y - yMax));
       // console.log('original coords', y, x, 'val', matrix[y][x]);
       // console.log('new coords', yCoord, xCoord);
 
@@ -55,11 +89,6 @@ function foldMatrix(matrix, fold) {
   // newMatrix.forEach(el => console.log(el));
 
   return newMatrix;
-}
-
-function calcMax(num, Limit) {
-  yMax - Math.abs(y - yMax);
-
 }
 
 function countPoints(matrix) {
@@ -99,8 +128,8 @@ const sample = processTextToArray('day13/sampleData.txt').forEach(line => {
 // console.log(sampleFolds);
 // console.log(sampleGridSize);
 
-console.log('17', foldTransparency(sampleCoords, sampleFolds, sampleGridSize, 1));
-console.log('16', foldTransparency(sampleCoords, sampleFolds, sampleGridSize));
+// console.log('17', foldTransparency(sampleCoords, sampleFolds, sampleGridSize, 1));
+// console.log('16', foldTransparency(sampleCoords, sampleFolds, sampleGridSize));
 
 
 const coords = [];
@@ -127,5 +156,5 @@ const data = processTextToArray('day13/data.txt').forEach(line => {
 // console.log(coords);
 // console.log(folds);
 // console.log(gridSize);
-// console.log('data', foldTransparency(coords, folds, gridSize, 1));
-// console.log('data', foldTransparency(coords, folds, gridSize));
+// console.log('data 671', foldTransparency(coords, folds, gridSize, 1));
+console.log('data', foldTransparency(coords, folds, gridSize));
